@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Portfólio - Enzo Binatti Baleroni</title>
   <style>
+    /* ---------------------------------- */
+    /* Variáveis para o estilo LED Amarelo */
+    /* ---------------------------------- */
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a; /* Fundo de cartões mais escuro */
+      --bg-card: #050505; /* Fundo de seções (mais escuro que o secondary) */
+      --text-primary: #f0f0f0;
+      --text-secondary: #aaaaaa;
+      --text-muted: #666666;
+      --border: #1a1a1a;
+      --accent: #ffc700; /* Amarelo/Âmbar LED */
+      --accent-glow: #ffe066; /* Amarelo mais claro para brilho */
+      --led-glow: 0 0 8px rgba(255, 199, 0, 0.7), 0 0 12px rgba(255, 199, 0, 0.5);
+    }
+    
     * {
       margin: 0;
       padding: 0;
@@ -13,8 +29,8 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: #000000;
-      color: #ffffff;
+      background: var(--bg-primary);
+      color: var(--text-primary);
       line-height: 1.6;
       min-height: 100vh;
     }
@@ -28,31 +44,68 @@
     header {
       text-align: center;
       padding: 4rem 2rem 3rem;
-      border-bottom: 1px solid #222;
+      border-bottom: 1px solid var(--border);
+      position: relative; /* Para posicionar o logo */
     }
 
+    /* ---------------------------------- */
+    /* Novo Estilo Logo */
+    /* ---------------------------------- */
+    .logo-box {
+      position: absolute;
+      left: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: left;
+      line-height: 1.2;
+    }
+
+    .logo-text {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--accent);
+      text-shadow: var(--led-glow);
+      display: block;
+    }
+
+    .logo-subtext {
+        display: block;
+        font-size: 0.7rem;
+        color: var(--text-primary);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+    }
+
+    /* ---------------------------------- */
+    /* Título H1 com Efeito LED */
+    /* ---------------------------------- */
     h1 {
       font-size: 3rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+      /* Gradiente do Amarelo LED */
+      background: linear-gradient(135deg, var(--accent-glow) 0%, var(--accent) 50%, var(--text-primary) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom: 1rem;
       letter-spacing: -0.02em;
+      text-shadow: 0 0 5px rgba(255, 199, 0, 0.4); /* Sombra sutil de brilho */
     }
 
     header p {
       font-size: 1.125rem;
-      color: #999;
+      color: var(--text-secondary);
       margin-bottom: 2rem;
     }
 
     header p strong {
-      color: #ffffff;
+      color: var(--text-primary);
       font-weight: 600;
     }
 
+    /* ---------------------------------- */
+    /* Navegação com Efeito LED */
+    /* ---------------------------------- */
     nav {
       display: flex;
       gap: 2rem;
@@ -61,7 +114,7 @@
     }
 
     nav a {
-      color: #999;
+      color: var(--text-secondary);
       text-decoration: none;
       font-weight: 500;
       padding: 0.5rem 1rem;
@@ -71,8 +124,9 @@
     }
 
     nav a:hover {
-      color: #ffffff;
-      background: #111;
+      color: var(--accent-glow);
+      background: var(--bg-secondary);
+      text-shadow: 0 0 3px rgba(255, 199, 0, 0.5);
     }
 
     nav a::after {
@@ -83,7 +137,8 @@
       transform: translateX(-50%) scaleX(0);
       width: 80%;
       height: 2px;
-      background: #ffffff;
+      background: var(--accent);
+      box-shadow: 0 0 5px rgba(255, 199, 0, 0.8);
       transition: transform 0.3s ease;
     }
 
@@ -95,9 +150,12 @@
       padding: 3rem 2rem;
     }
 
+    /* ---------------------------------- */
+    /* Cartões e Hover com LED */
+    /* ---------------------------------- */
     .card {
-      background: #0a0a0a;
-      border: 1px solid #222;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: 16px;
       padding: 2.5rem;
       margin-bottom: 2rem;
@@ -105,8 +163,8 @@
     }
 
     .card:hover {
-      border-color: #333;
-      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.05);
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(255, 199, 0, 0.2);
       transform: translateY(-2px);
     }
 
@@ -114,26 +172,218 @@
       font-size: 2rem;
       font-weight: 700;
       margin-bottom: 1.5rem;
-      color: #ffffff;
+      color: var(--text-primary);
       letter-spacing: -0.01em;
     }
 
     .card p {
       font-size: 1.125rem;
-      color: #aaa;
+      color: var(--text-secondary);
       line-height: 1.8;
     }
 
-    .ai-box {
+    /* ---------------------------------- */
+    /* Grids Responsivos */
+    /* ---------------------------------- */
+    .stats-grid, .services-grid, .differentials-grid, .contact-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-item, .service-card, .differential-item, .contact-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover, .service-card:hover, .differential-item:hover, .contact-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(255, 199, 0, 0.2);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 0.5rem;
+      /* Gradiente LED */
+      background: linear-gradient(135deg, var(--accent-glow) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: var(--led-glow);
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .service-icon, .differential-icon, .contact-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+      filter: drop-shadow(0 0 3px var(--accent));
+    }
+
+    .service-card h3, .differential-item h3, .contact-item h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .service-card p, .differential-item p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* ---------------------------------- */
+    /* Processo de Trabalho */
+    /* ---------------------------------- */
+    .process-steps {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .process-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .process-step:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(255, 199, 0, 0.2);
+    }
+
+    .step-number {
+      background: var(--accent);
+      color: var(--bg-primary);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    }
+
+    .step-content h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .step-content p {
+      color: var(--text-secondary);
+    }
+
+    /* ---------------------------------- */
+    /* Depoimentos */
+    /* ---------------------------------- */
+    .testimonial {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .testimonial:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(255, 199, 0, 0.2);
+    }
+
+    .testimonial-text {
+      font-style: italic;
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .testimonial-author {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .testimonial-role {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ---------------------------------- */
+    /* FAQ */
+    /* ---------------------------------- */
+    .faq-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item.active {
+      border-color: var(--accent);
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .faq-toggle {
+      color: var(--accent);
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-toggle {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      padding: 0 1.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      color: var(--text-secondary);
+    }
+
+    .faq-item.active .faq-answer {
+      padding: 0 1.5rem 1.5rem;
+      max-height: 500px;
+    }
+
+    /* ---------------------------------- */
+    /* Estilo de Formulário e Botão LED */
+    /* ---------------------------------- */
+    .ai-box, form {
+      margin-top: 1.5rem;
     }
 
     label {
-      font-size: 1rem;
-      color: #ccc;
-      font-weight: 500;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
     }
 
     textarea,
@@ -141,141 +391,98 @@
     input[type="email"],
     input {
       width: 100%;
-      padding: 1rem;
-      background: #000;
-      border: 1px solid #333;
-      border-radius: 12px;
-      color: #ffffff;
-      font-size: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
       font-family: inherit;
+      font-size: 1rem;
+      margin-bottom: 1rem;
       transition: all 0.3s ease;
-      resize: vertical;
     }
 
     textarea {
       min-height: 120px;
+      resize: vertical;
     }
 
     textarea:focus,
     input:focus {
       outline: none;
-      border-color: #666;
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
-    }
-
-    textarea::placeholder,
-    input::placeholder {
-      color: #555;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 199, 0, 0.2);
     }
 
     .btn {
-      padding: 1rem 2rem;
-      background: #ffffff;
-      color: #000000;
+      background: var(--accent);
+      color: var(--bg-primary);
       border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-family: inherit;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
     }
 
     .btn:hover {
-      background: #e0e0e0;
+      background: var(--accent-glow);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
-    }
-
-    .btn:active {
-      transform: translateY(0);
+      box-shadow: var(--led-glow);
     }
 
     .muted {
-      color: #777;
-      font-size: 0.95rem;
-      margin-top: 1rem;
       padding: 1rem;
-      background: #050505;
       border-radius: 8px;
-      border: 1px solid #1a1a1a;
-      min-height: 50px;
+      margin-top: 1rem;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
     }
 
     .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
     }
-
+    
     .tag {
-      padding: 0.5rem 1rem;
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-    }
-
-    .tag:hover {
-      background: #1a1a1a;
-      border-color: #444;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    footer {
-      text-align: center;
-      padding: 3rem 2rem;
-      border-top: 1px solid #222;
-      margin-top: 3rem;
-    }
-
-    footer small {
-      color: #666;
-      font-size: 0.95rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--accent);
+        color: var(--accent-glow);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        text-shadow: 0 0 2px rgba(255, 199, 0, 0.5);
     }
 
     .success {
-      color: #4ade80;
-      background: rgba(74, 222, 128, 0.1);
-      border-color: rgba(74, 222, 128, 0.2);
+      color: #7efc7e; /* Green for success */
+      background: rgba(0, 255, 0, 0.1);
+      border-color: rgba(0, 255, 0, 0.2);
     }
 
     .error {
-      color: #f87171;
-      background: rgba(248, 113, 113, 0.1);
-      border-color: rgba(248, 113, 113, 0.2);
+      color: #ff8888; /* Red for error */
+      background: rgba(255, 0, 0, 0.1);
+      border-color: rgba(255, 0, 0, 0.2);
     }
 
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 2rem;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      .card {
-        padding: 1.5rem;
-      }
-
-      nav {
-        gap: 1rem;
-      }
-
-      header {
-        padding: 3rem 1rem 2rem;
-      }
+    /* ---------------------------------- */
+    /* Footer */
+    /* ---------------------------------- */
+    footer {
+        border-top: 1px solid var(--border);
+        padding-top: 2rem;
+        text-align: center;
+        color: var(--text-secondary);
     }
-
+    
+    /* ---------------------------------- */
+    /* Animações */
+    /* ---------------------------------- */
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -303,290 +510,56 @@
       animation-delay: 0.3s;
     }
 
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
+    /* ---------------------------------- */
+    /* Responsividade */
+    /* ---------------------------------- */
+    @media (max-width: 768px) {
+      /* Ajuste o logo para o centro em telas pequenas */
+      .logo-box {
+          position: static;
+          transform: none;
+          text-align: center;
+          margin-bottom: 2rem;
+      }
+      
+      header {
+          padding: 3rem 1rem 2rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
 
-    .service-card {
-      background: #050505;
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 2rem;
-      transition: all 0.3s ease;
-    }
+      h2 {
+        font-size: 1.5rem;
+      }
 
-    .service-card:hover {
-      border-color: #444;
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.08);
-    }
+      .card {
+        padding: 1.5rem;
+      }
 
-    .service-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
+      nav {
+        gap: 1rem;
+      }
 
-    .service-card h3 {
-      font-size: 1.25rem;
-      color: #ffffff;
-      margin-bottom: 0.75rem;
-      font-weight: 600;
-    }
+      .stats-grid, .services-grid, .differentials-grid, .contact-info {
+        grid-template-columns: 1fr;
+      }
 
-    .service-card p {
-      font-size: 0.95rem;
-      color: #888;
-      line-height: 1.6;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-
-    .stat-item {
-      text-align: center;
-      padding: 2rem;
-      background: #050505;
-      border: 1px solid #222;
-      border-radius: 12px;
-      transition: all 0.3s ease;
-    }
-
-    .stat-item:hover {
-      border-color: #333;
-      transform: scale(1.05);
-    }
-
-    .stat-number {
-      font-size: 3rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-label {
-      color: #999;
-      font-size: 0.95rem;
-    }
-
-    .testimonial {
-      background: #050505;
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 1.5rem;
-      transition: all 0.3s ease;
-    }
-
-    .testimonial:hover {
-      border-color: #333;
-    }
-
-    .testimonial-text {
-      font-size: 1.05rem;
-      color: #ccc;
-      line-height: 1.8;
-      margin-bottom: 1rem;
-      font-style: italic;
-    }
-
-    .testimonial-author {
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
-    .testimonial-role {
-      color: #777;
-      font-size: 0.85rem;
-    }
-
-    .faq-item {
-      background: #050505;
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .faq-item:hover {
-      border-color: #333;
-    }
-
-    .faq-question {
-      font-size: 1.1rem;
-      color: #ffffff;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .faq-answer {
-      color: #999;
-      margin-top: 1rem;
-      line-height: 1.7;
-      display: none;
-    }
-
-    .faq-item.active .faq-answer {
-      display: block;
-    }
-
-    .faq-toggle {
-      color: #666;
-      font-size: 1.5rem;
-      transition: transform 0.3s ease;
-    }
-
-    .faq-item.active .faq-toggle {
-      transform: rotate(45deg);
-    }
-
-    .process-steps {
-      display: grid;
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .process-step {
-      display: flex;
-      gap: 1.5rem;
-      background: #050505;
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 2rem;
-      transition: all 0.3s ease;
-    }
-
-    .process-step:hover {
-      border-color: #333;
-    }
-
-    .step-number {
-      flex-shrink: 0;
-      width: 50px;
-      height: 50px;
-      background: #ffffff;
-      color: #000;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .step-content h3 {
-      font-size: 1.2rem;
-      color: #ffffff;
-      margin-bottom: 0.5rem;
-    }
-
-    .step-content p {
-      color: #888;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    .contact-info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .contact-item {
-      background: #050505;
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 1.5rem;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .contact-item:hover {
-      border-color: #333;
-      transform: translateY(-2px);
-    }
-
-    .contact-icon {
-      font-size: 2rem;
-      margin-bottom: 0.75rem;
-      display: block;
-    }
-
-    .contact-item h3 {
-      font-size: 1rem;
-      color: #ffffff;
-      margin-bottom: 0.5rem;
-    }
-
-    .contact-item a {
-      color: #999;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .contact-item a:hover {
-      color: #ffffff;
-    }
-
-    .differentials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .differential-item {
-      background: #050505;
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 2rem;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .differential-item:hover {
-      border-color: #333;
-      transform: translateY(-2px);
-    }
-
-    .differential-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
-
-    .differential-item h3 {
-      font-size: 1.1rem;
-      color: #ffffff;
-      margin-bottom: 0.75rem;
-    }
-
-    .differential-item p {
-      font-size: 0.9rem;
-      color: #888;
-      line-height: 1.6;
+      .process-step {
+        flex-direction: column;
+        text-align: center;
+      }
     }
   </style>
 </head>
 <body>
   <header class="container">
+    <div class="logo-box">
+        <span class="logo-text">A C</span>
+        <span class="logo-subtext">Aliança Contábil</span>
+    </div>
+    
     <h1>Enzo Binatti Baleroni</h1>
     <p>30 anos | Formado na UNIPAR | Dono da <strong>Aliança Contábil</strong></p>
     <nav>
@@ -634,7 +607,7 @@
 
     <section id="servicos" class="card">
       <h2>Nossos Serviços</h2>
-      <p style="color: #aaa; margin-bottom: 1rem;">Oferecemos uma gama completa de serviços contábeis e fiscais para atender todas as necessidades da sua empresa.</p>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem;">Oferecemos uma gama completa de serviços contábeis e fiscais para atender todas as necessidades da sua empresa.</p>
       
       <div class="services-grid">
         <div class="service-card">
@@ -689,7 +662,7 @@
 
     <section class="card">
       <h2>IA: Sugestão de Serviços</h2>
-      <p style="color: #aaa; margin-bottom: 1rem;">Não sabe qual serviço precisa? Descreva sua necessidade e nossa IA sugerirá os serviços mais adequados.</p>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem;">Não sabe qual serviço precisa? Descreva sua necessidade e nossa IA sugerirá os serviços mais adequados.</p>
       <div class="ai-box">
         <label for="servicosTxt">Descreva o que você precisa:</label>
         <textarea id="servicosTxt" placeholder="Ex: Preciso abrir uma empresa de tecnologia e não sei por onde começar..."></textarea>
@@ -914,145 +887,150 @@
         <div class="contact-item">
           <span class="contact-icon">📍</span>
           <h3>Endereço</h3>
-          <p style="color: #999; font-size: 0.9rem;">Umuarama - PR</p>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Umuarama - PR</p>
         </div>
         
         <div class="contact-item">
-          <span class="contact-icon">🕐</span>
-          <h3>Horário</h3>
-          <p style="color: #999; font-size: 0.9rem;">Seg-Sex: 8h às 18h</p>
+          <span class="contact-icon">🕒</span>
+          <h3>Horário de Atendimento</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Segunda a Sexta: 8h às 18h</p>
         </div>
       </div>
       
-      <h3 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 1.5rem;">Envie uma Mensagem</h3>
-      <form id="formContato" method="POST" action="contact.php">
-        <input required name="nome" placeholder="Seu nome completo" />
-        <input required type="email" name="email" placeholder="Seu melhor email" />
-        <input name="telefone" placeholder="Seu telefone (opcional)" />
-        <textarea required name="mensagem" placeholder="Conte-nos como podemos ajudar..."></textarea>
+      <form id="contactForm">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" required>
+          </div>
+          <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+          </div>
+        </div>
+        
+        <label for="assunto">Assunto:</label>
+        <input type="text" id="assunto" required>
+        
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" required></textarea>
+        
         <button type="submit" class="btn">Enviar Mensagem</button>
       </form>
-      <div id="respContato" class="muted"></div>
     </section>
   </main>
 
   <footer class="container">
-    <small>© <span id="currentYear"></span> Enzo Binatti Baleroni | Aliança Contábil | CRC/PR 123456 | Todos os direitos reservados</small>
+    <p>© 2023 Aliança Contábil - Todos os direitos reservados</p>
   </footer>
 
   <script>
-    // Set current year
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-    // AI Service Suggestion
-    document.getElementById('btnSugerir').addEventListener('click', function() {
-      const texto = document.getElementById('servicosTxt').value.trim();
-      const container = document.getElementById('tagsSugeridas');
-      
-      if (!texto) {
-        container.innerHTML = '<span class="error">Por favor, descreva o que você precisa.</span>';
-        return;
-      }
-
-      // Simulate AI processing
-      container.innerHTML = '<span style="color: #999;">Analisando sua solicitação...</span>';
-      
-      setTimeout(() => {
-        const servicos = analisarServicos(texto);
-        
-        if (servicos.length > 0) {
-          container.innerHTML = '<div class="tags">' + 
-            servicos.map(s => `<span class="tag">${s}</span>`).join('') + 
-            '</div>';
-        } else {
-          container.innerHTML = '<span>Não foi possível identificar serviços específicos. Entre em contato para mais informações.</span>';
-        }
-      }, 1000);
-    });
-
-    function analisarServicos(texto) {
-      const lower = texto.toLowerCase();
-      const servicos = [];
-      
-      if (lower.includes('imposto') || lower.includes('declaração') || lower.includes('ir')) {
-        servicos.push('Declaração de Imposto de Renda');
-      }
-      if (lower.includes('empresa') || lower.includes('cnpj') || lower.includes('abrir')) {
-        servicos.push('Abertura de Empresa');
-      }
-      if (lower.includes('contabil') || lower.includes('contabilidade')) {
-        servicos.push('Contabilidade Completa');
-      }
-      if (lower.includes('folha') || lower.includes('pagamento') || lower.includes('funcionário')) {
-        servicos.push('Folha de Pagamento');
-      }
-      if (lower.includes('fiscal') || lower.includes('nota')) {
-        servicos.push('Gestão Fiscal');
-      }
-      if (lower.includes('consultor') || lower.includes('planejamento')) {
-        servicos.push('Consultoria Tributária');
-      }
-      if (lower.includes('balanço') || lower.includes('demonstra')) {
-        servicos.push('Balanço Patrimonial');
-      }
-      
-      return servicos;
-    }
-
-    // Contact Form
-    document.getElementById('formContato').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const respDiv = document.getElementById('respContato');
-      const formData = new FormData(this);
-      
-      respDiv.innerHTML = '<span style="color: #999;">Enviando mensagem...</span>';
-      
-      fetch('contact.php', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          respDiv.innerHTML = '<span class="success">✓ Mensagem enviada com sucesso! Entraremos em contato em breve.</span>';
-          document.getElementById('formContato').reset();
-        } else {
-          respDiv.innerHTML = '<span class="error">✗ Erro ao enviar mensagem. Tente novamente.</span>';
-        }
-      })
-      .catch(error => {
-        respDiv.innerHTML = '<span class="error">✗ Erro ao enviar mensagem. Tente novamente mais tarde.</span>';
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentNode;
+        item.classList.toggle('active');
       });
     });
 
-    // Smooth scroll for navigation
+    // Sugestão de Serviços por IA
+    document.getElementById('btnSugerir').addEventListener('click', () => {
+      const input = document.getElementById('servicosTxt').value.toLowerCase();
+      const tagsDiv = document.getElementById('tagsSugeridas');
+      
+      // Limpar sugestões anteriores
+      tagsDiv.innerHTML = '';
+      
+      if (!input.trim()) {
+        tagsDiv.textContent = 'Por favor, descreva sua necessidade para receber sugestões.';
+        return;
+      }
+      
+      // Simulação de IA - Mapeamento de palavras-chave para serviços
+      const keywords = {
+        'abrir': 'Abertura de Empresas',
+        'empresa': 'Abertura de Empresas',
+        'cnpj': 'Abertura de Empresas',
+        'imposto': 'Consultoria Tributária',
+        'tributo': 'Consultoria Tributária',
+        'irpf': 'Declaração de IR',
+        'imposto de renda': 'Declaração de IR',
+        'folha': 'Folha de Pagamento',
+        'salário': 'Folha de Pagamento',
+        'funcionário': 'Folha de Pagamento',
+        'contabilidade': 'Contabilidade Completa',
+        'balanço': 'Balanço Patrimonial',
+        'fiscal': 'Gestão Fiscal',
+        'auditoria': 'Auditoria Contábil',
+        'planejamento': 'Consultoria Tributária'
+      };
+      
+      // Identificar serviços relevantes
+      const suggestedServices = new Set();
+      
+      for (const [keyword, service] of Object.entries(keywords)) {
+        if (input.includes(keyword)) {
+          suggestedServices.add(service);
+        }
+      }
+      
+      // Se não encontrou correspondências específicas
+      if (suggestedServices.size === 0) {
+        // Sugerir serviços gerais
+        suggestedServices.add('Contabilidade Completa');
+        suggestedServices.add('Consultoria Tributária');
+      }
+      
+      // Exibir sugestões
+      if (suggestedServices.size > 0) {
+        tagsDiv.innerHTML = '<p>Com base na sua descrição, sugerimos:</p><div class="tags"></div>';
+        const tagsContainer = tagsDiv.querySelector('.tags');
+        
+        suggestedServices.forEach(service => {
+          const tag = document.createElement('span');
+          tag.className = 'tag';
+          tag.textContent = service;
+          tagsContainer.appendChild(tag);
+        });
+      }
+    });
+
+    // Formulário de Contato
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Simulação de envio
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+      const assunto = document.getElementById('assunto').value;
+      const mensagem = document.getElementById('mensagem').value;
+      
+      // Validação simples
+      if (!nome || !email || !assunto || !mensagem) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+      }
+      
+      // Simulação de envio bem-sucedido
+      alert(`Obrigado, ${nome}! Sua mensagem foi enviada com sucesso. Entraremos em contato em breve.`);
+      
+      // Limpar formulário
+      this.reset();
+    });
+
+    // Scroll suave para âncoras
     document.querySelectorAll('nav a').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 100,
+            behavior: 'smooth'
           });
-        }
-      });
-    });
-
-    // FAQ toggle functionality
-    document.querySelectorAll('.faq-item').forEach(item => {
-      item.addEventListener('click', function() {
-        const wasActive = this.classList.contains('active');
-        
-        // Close all FAQ items
-        document.querySelectorAll('.faq-item').forEach(faq => {
-          faq.classList.remove('active');
-        });
-        
-        // Open clicked item if it wasn't active
-        if (!wasActive) {
-          this.classList.add('active');
         }
       });
     });

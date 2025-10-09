@@ -33,16 +33,18 @@
 
         h1 {
             font-size: 2.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 10px;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;
         }
 
         .header-subtitle {
             color: #888;
             font-size: 1rem;
+            text-shadow: 0 0 2px #ffffff;
         }
 
         .toolbar {
@@ -68,18 +70,21 @@
             cursor: pointer;
             font-size: 0.9rem;
             transition: all 0.3s ease;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .btn:hover {
             background: #333;
             border-color: #666;
             transform: translateY(-2px);
+            box-shadow: 0 0 10px #ffffff, 0 0 15px #ffffff;
         }
 
         .btn.active {
             background: #fff;
             color: #000;
             border-color: #fff;
+            box-shadow: 0 0 10px #ffffff;
         }
 
         .btn-primary {
@@ -87,10 +92,12 @@
             color: #000;
             border: none;
             font-weight: 600;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .btn-primary:hover {
             background: linear-gradient(135deg, #cccccc 0%, #aaaaaa 100%);
+            box-shadow: 0 0 10px #ffffff, 0 0 15px #ffffff;
         }
 
         .search-filter {
@@ -108,11 +115,13 @@
             border-radius: 8px;
             color: #fff;
             font-size: 0.9rem;
+            box-shadow: inset 0 0 5px #ffffff;
         }
 
         .search-input:focus {
             outline: none;
             border-color: #666;
+            box-shadow: 0 0 10px #ffffff;
         }
 
         .filter-select {
@@ -123,6 +132,7 @@
             color: #fff;
             font-size: 0.9rem;
             cursor: pointer;
+            box-shadow: inset 0 0 5px #ffffff;
         }
 
         .calendar-header {
@@ -134,6 +144,7 @@
             background: #1a1a1a;
             border-radius: 12px;
             border: 1px solid #333;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .calendar-nav {
@@ -145,6 +156,7 @@
         .calendar-title {
             font-size: 1.5rem;
             font-weight: 600;
+            text-shadow: 0 0 3px #ffffff;
         }
 
         .calendar-grid {
@@ -162,6 +174,7 @@
             font-weight: 600;
             color: #888;
             font-size: 0.9rem;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .calendar-day {
@@ -173,12 +186,14 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .calendar-day:hover {
             background: #222;
             border-color: #555;
             transform: translateY(-2px);
+            box-shadow: 0 0 10px #ffffff, 0 0 15px #ffffff;
         }
 
         .calendar-day.other-month {
@@ -188,12 +203,14 @@
         .calendar-day.today {
             border: 2px solid #fff;
             background: #252525;
+            box-shadow: 0 0 10px #ffffff;
         }
 
         .day-number {
             font-weight: 600;
             margin-bottom: 8px;
             font-size: 0.9rem;
+            text-shadow: 0 0 3px #ffffff;
         }
 
         .day-events {
@@ -211,11 +228,13 @@
             text-overflow: ellipsis;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .event-dot:hover {
             transform: scale(1.05);
             opacity: 0.9;
+            box-shadow: 0 0 10px #ffffff;
         }
 
         .event-list {
@@ -230,12 +249,14 @@
             padding: 20px;
             transition: all 0.3s ease;
             cursor: pointer;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .event-card:hover {
             background: #222;
             border-color: #555;
             transform: translateY(-2px);
+            box-shadow: 0 0 10px #ffffff, 0 0 15px #ffffff;
         }
 
         .event-card-header {
@@ -249,11 +270,13 @@
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 5px;
+            text-shadow: 0 0 3px #ffffff;
         }
 
         .event-time {
             color: #888;
             font-size: 0.9rem;
+            text-shadow: 0 0 2px #ffffff;
         }
 
         .event-category {
@@ -261,12 +284,14 @@
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .event-description {
             color: #aaa;
             margin-bottom: 10px;
             line-height: 1.5;
+            text-shadow: 0 0 2px #ffffff;
         }
 
         .event-details {
@@ -274,6 +299,7 @@
             gap: 20px;
             color: #888;
             font-size: 0.9rem;
+            text-shadow: 0 0 2px #ffffff;
         }
 
         .modal {
@@ -303,6 +329,7 @@
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 0 10px #ffffff;
         }
 
         .modal-header {
@@ -315,6 +342,7 @@
         .modal-title {
             font-size: 1.5rem;
             font-weight: 600;
+            text-shadow: 0 0 3px #ffffff;
         }
 
         .close-btn {
@@ -336,6 +364,7 @@
         .close-btn:hover {
             background: #333;
             color: #fff;
+            box-shadow: 0 0 10px #ffffff;
         }
 
         .form-group {
@@ -348,6 +377,7 @@
             color: #aaa;
             font-size: 0.9rem;
             font-weight: 500;
+            text-shadow: 0 0 2px #ffffff;
         }
 
         .form-input,
@@ -361,6 +391,7 @@
             color: #fff;
             font-size: 0.95rem;
             font-family: inherit;
+            box-shadow: inset 0 0 5px #ffffff;
         }
 
         .form-input:focus,
@@ -368,6 +399,7 @@
         .form-select:focus {
             outline: none;
             border-color: #666;
+            box-shadow: 0 0 10px #ffffff;
         }
 
         .form-textarea {
@@ -394,15 +426,17 @@
             cursor: pointer;
             border: 2px solid transparent;
             transition: all 0.3s ease;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .color-option:hover {
             transform: scale(1.1);
+            box-shadow: 0 0 10px #ffffff, 0 0 15px #ffffff;
         }
 
         .color-option.selected {
             border-color: #fff;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px #ffffff, 0 0 10px #ffffff;
         }
 
         .modal-actions {
@@ -417,10 +451,12 @@
             color: #fff;
             border: none;
             margin-right: auto;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .btn-delete:hover {
             background: #cc0000;
+            box-shadow: 0 0 10px #ffffff, 0 0 15px #ffffff;
         }
 
         .stats-grid {
@@ -436,17 +472,20 @@
             border-radius: 12px;
             padding: 20px;
             text-align: center;
+            box-shadow: 0 0 5px #ffffff;
         }
 
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 5px;
+            text-shadow: 0 0 3px #ffffff;
         }
 
         .stat-label {
             color: #888;
             font-size: 0.9rem;
+            text-shadow: 0 0 2px #ffffff;
         }
 
         .week-view,
@@ -475,6 +514,7 @@
             color: #888;
             font-size: 0.9rem;
             padding-top: 5px;
+            text-shadow: 0 0 2px #ffffff;
         }
 
         .time-events {
@@ -665,6 +705,16 @@
                         <div class="color-option" data-color="#ef4444" style="background: #ef4444;"></div>
                         <div class="color-option" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
                         <div class="color-option" data-color="#ec4899" style="background: #ec4899;"></div>
+                        <div class="color-option" data-color="#ffffff" style="background: #ffffff;"></div>
+                        <div class="color-option" data-color="#cccccc" style="background: #cccccc;"></div>
+                        <div class="color-option" data-color="#aaaaaa" style="background: #aaaaaa;"></div>
+                        <div class="color-option" data-color="#888888" style="background: #888888;"></div>
+                        <div class="color-option" data-color="#666666" style="background: #666666;"></div>
+                        <div class="color-option" data-color="#444444" style="background: #444444;"></div>
+                        <div class="color-option" data-color="#22c55e" style="background: #22c55e;"></div>
+                        <div class="color-option" data-color="#eab308" style="background: #eab308;"></div>
+                        <div class="color-option" data-color="#f97316" style="background: #f97316;"></div>
+                        <div class="color-option" data-color="#a855f7" style="background: #a855f7;"></div>
                     </div>
                 </div>
 

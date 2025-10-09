@@ -4,7 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Interativo - Teste seus Conhecimentos</title>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interativo - Teste seus Conhecimentos</title>
     <style>
+        /* Cores LED/NEON:
+           - Neon Principal: #FFFFFF (Branco Puro / Glacial)
+           - Neon Secundário: #7DF9FF (Azul Glacial)
+           - Fundo: #000000 (Preto Absoluto)
+           - Borda/Divisor: #1a1a1a (Cinza escuro)
+        */
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,9 +25,10 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            color: #ffffff;
+            /* Fundo Preto para realçar o LED Branco/Gelo */
+            font-family: 'Space Mono', monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #000000;
+            color: #F0F0F0; /* Texto quase branco */
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -29,12 +43,13 @@
         }
 
         .quiz-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente escuro */
+            border: 1px solid #1a1a1a; 
+            border-radius: 15px;
             padding: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            /* Brilho Glacial */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(255, 255, 255, 0.05);
             animation: fadeIn 0.5s ease-out;
         }
 
@@ -52,33 +67,36 @@
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            /* Efeito Neon Branco/Glacial */
+            color: #FFFFFF; 
+            text-shadow: 0 0 5px #FFFFFF, 0 0 10px #7DF9FF, 0 0 15px rgba(255, 255, 255, 0.8);
             margin-bottom: 10px;
             text-align: center;
         }
 
         .subtitle {
             text-align: center;
-            color: #888;
+            color: #7DF9FF; /* Azul Glacial para o subtítulo */
             margin-bottom: 30px;
             font-size: 1.1rem;
         }
 
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
+            height: 10px; 
+            background: #0d0d0d;
+            border: 1px solid #1a1a1a;
             border-radius: 10px;
             margin-bottom: 30px;
             overflow: hidden;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            /* LED de Progresso (Verde Neon) */
+            background: linear-gradient(90deg, #39FF14, #00FF7F);
+            box-shadow: 0 0 10px #39FF14, 0 0 20px #00FF7F;
             border-radius: 10px;
             transition: width 0.3s ease;
         }
@@ -92,35 +110,38 @@
 
         .stat-item {
             flex: 1;
-            background: rgba(255, 255, 255, 0.05);
+            background: #0d0d0d;
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 10px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #1a1a1a;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
         }
 
         .stat-label {
             font-size: 0.85rem;
-            color: #888;
+            color: #7DF9FF;
             margin-bottom: 5px;
         }
 
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #fff;
+            color: #FFFFFF; /* Branco */
+            text-shadow: 0 0 5px #FFFFFF;
         }
 
         .category-badge {
             display: inline-block;
             padding: 6px 16px;
-            background: rgba(76, 175, 80, 0.2);
-            color: #4CAF50;
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 20px;
-            border: 1px solid rgba(76, 175, 80, 0.3);
+            border: 1px solid #FFFFFF;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         .question-container {
@@ -131,8 +152,9 @@
             font-size: 1.4rem;
             font-weight: 600;
             margin-bottom: 25px;
-            color: #fff;
+            color: #FFFFFF;
             line-height: 1.5;
+            text-shadow: 0 0 2px #F0F0F0;
         }
 
         .options {
@@ -142,91 +164,108 @@
         }
 
         .option {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: #0d0d0d;
+            border: 2px solid #1a1a1a;
             padding: 18px 24px;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1.05rem;
             position: relative;
             overflow: hidden;
+            color: #F0F0F0;
         }
 
         .option:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: #1a1a1a;
+            border-color: #FFFFFF;
+            box-shadow: 0 0 10px #FFFFFF; /* Brilho ao passar o mouse */
             transform: translateX(5px);
         }
 
         .option.selected {
-            background: rgba(76, 175, 80, 0.2);
-            border-color: #4CAF50;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #FFFFFF;
+            box-shadow: 0 0 15px #FFFFFF;
         }
 
         .option.correct {
-            background: rgba(76, 175, 80, 0.3);
-            border-color: #4CAF50;
+            /* LED de Acerto (Verde Limão) */
+            background: rgba(57, 255, 20, 0.2);
+            border-color: #39FF14;
+            box-shadow: 0 0 15px #39FF14, 0 0 5px #00FF7F;
             animation: correctPulse 0.5s ease;
         }
 
         .option.incorrect {
-            background: rgba(244, 67, 54, 0.3);
-            border-color: #f44336;
+            /* LED de Erro (Vermelho Frio) */
+            background: rgba(255, 0, 70, 0.2);
+            border-color: #FF0046;
+            box-shadow: 0 0 15px #FF0046, 0 0 5px #FF6969;
             animation: incorrectShake 0.5s ease;
         }
 
         .option.disabled {
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.7;
         }
 
         @keyframes correctPulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+            50% { transform: scale(1.01); }
         }
 
         @keyframes incorrectShake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .option-letter {
             display: inline-block;
             width: 30px;
             height: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
+            background: #1a1a1a;
+            border: 1px solid #7DF9FF;
+            border-radius: 5px;
             text-align: center;
-            line-height: 30px;
+            line-height: 28px;
             margin-right: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            color: #7DF9FF;
+            text-shadow: 0 0 5px #7DF9FF;
         }
 
         .btn {
             width: 100%;
             padding: 16px 32px;
-            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
-            color: #000;
+            /* Botão Branco Glacial */
+            background: #FFFFFF;
+            color: #000000;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 20px;
+            box-shadow: 0 0 15px #FFFFFF, 0 0 30px rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+            background: #E0E0E0;
+            box-shadow: 0 0 20px #FFFFFF, 0 10px 30px rgba(255, 255, 255, 0.4);
         }
 
         .btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
+            background: #1a1a1a;
+            color: #333333;
         }
 
         .start-screen, .results-screen {
@@ -240,7 +279,7 @@
 
         .start-screen p {
             font-size: 1.2rem;
-            color: #888;
+            color: #7DF9FF;
             margin-bottom: 40px;
         }
 
@@ -251,7 +290,8 @@
         .theme-selection h3 {
             font-size: 1.3rem;
             margin-bottom: 20px;
-            color: #fff;
+            color: #FFFFFF;
+            text-shadow: 0 0 5px #FFFFFF;
         }
 
         .theme-grid {
@@ -262,39 +302,45 @@
         }
 
         .theme-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: #0d0d0d;
+            border: 2px solid #1a1a1a;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
         }
 
         .theme-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: #1a1a1a;
+            border-color: #FFFFFF;
+            box-shadow: 0 0 10px #FFFFFF;
             transform: translateY(-5px);
         }
 
         .theme-card.selected {
-            background: rgba(76, 175, 80, 0.2);
-            border-color: #4CAF50;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #FFFFFF;
+            box-shadow: 0 0 20px #FFFFFF, inset 0 0 10px #FFFFFF;
         }
 
         .theme-icon {
             font-size: 2.5rem;
             margin-bottom: 10px;
+            color: #7DF9FF; /* Azul Glacial */
+            text-shadow: 0 0 10px #7DF9FF;
         }
 
         .theme-name {
             font-weight: 600;
             margin-bottom: 5px;
+            color: #F0F0F0;
         }
 
         .theme-count {
             font-size: 0.85rem;
-            color: #888;
+            color: #7DF9FF;
         }
 
         .features {
@@ -305,45 +351,51 @@
         }
 
         .feature {
-            background: rgba(255, 255, 255, 0.05);
+            background: #0d0d0d;
             padding: 20px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid #1a1a1a;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
         }
 
         .feature-icon {
             font-size: 2rem;
             margin-bottom: 10px;
+            color: #FFFFFF;
+            text-shadow: 0 0 5px #FFFFFF;
         }
 
         .feature-title {
             font-weight: 600;
             margin-bottom: 5px;
+            color: #FFFFFF;
         }
 
         .feature-desc {
             font-size: 0.9rem;
-            color: #888;
+            color: #7DF9FF;
         }
 
         .results-screen h2 {
             font-size: 2.5rem;
+            color: #FFFFFF;
+            text-shadow: 0 0 5px #FFFFFF;
             margin-bottom: 20px;
         }
 
         .score-display {
             font-size: 4rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            /* LED de Pontuação - Verde Limão */
+            color: #39FF14;
+            text-shadow: 0 0 10px #39FF14, 0 0 20px rgba(57, 255, 20, 0.8);
             margin-bottom: 20px;
         }
 
         .score-message {
             font-size: 1.3rem;
-            color: #888;
+            color: #7DF9FF;
+            text-shadow: 0 0 3px #7DF9FF;
             margin-bottom: 30px;
         }
 
@@ -355,15 +407,16 @@
         }
 
         .result-item {
-            background: rgba(255, 255, 255, 0.05);
+            background: #0d0d0d;
             padding: 20px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid #1a1a1a;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
         }
 
         .result-label {
             font-size: 0.9rem;
-            color: #888;
+            color: #7DF9FF;
             margin-bottom: 8px;
         }
 
@@ -373,11 +426,13 @@
         }
 
         .correct-value {
-            color: #4CAF50;
+            color: #39FF14; /* Verde Limão LED */
+            text-shadow: 0 0 5px #39FF14;
         }
 
         .incorrect-value {
-            color: #f44336;
+            color: #FF0046; /* Vermelho Frio LED */
+            text-shadow: 0 0 5px #FF0046;
         }
 
         .hidden {
@@ -390,18 +445,21 @@
             border-radius: 10px;
             font-size: 0.95rem;
             animation: fadeIn 0.3s ease;
+            font-weight: 600;
         }
 
         .feedback.correct {
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            color: #4CAF50;
+            background: rgba(57, 255, 20, 0.1);
+            border: 1px solid #39FF14;
+            color: #39FF14;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
         }
 
         .feedback.incorrect {
-            background: rgba(244, 67, 54, 0.2);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            color: #f44336;
+            background: rgba(255, 0, 70, 0.1);
+            border: 1px solid #FF0046;
+            color: #FF0046;
+            box-shadow: 0 0 10px rgba(255, 0, 70, 0.5);
         }
 
         @media (max-width: 768px) {
@@ -439,52 +497,50 @@
         }
     </style>
 </head>
-<body>
+<body onload="updateThemeCounts()">
     <div class="container">
         <div class="quiz-card">
-            <!-- Start Screen -->
             <div id="startScreen" class="start-screen">
                 <h1>Quiz Interativo</h1>
                 <p class="subtitle">Teste seus conhecimentos em diversas áreas</p>
                 
-                <!-- Theme Selection Section -->
                 <div class="theme-selection">
                     <h3>Escolha um Tema:</h3>
                     <div class="theme-grid" id="themeGrid">
-                        <div class="theme-card" onclick="selectTheme('all')">
+                        <div class="theme-card" onclick="selectTheme('all', this)">
                             <div class="theme-icon">🎯</div>
                             <div class="theme-name">Todos os Temas</div>
-                            <div class="theme-count">30 perguntas</div>
+                            <div class="theme-count" id="count-all"></div>
                         </div>
-                        <div class="theme-card" onclick="selectTheme('História')">
+                        <div class="theme-card" onclick="selectTheme('História', this)">
                             <div class="theme-icon">📜</div>
                             <div class="theme-name">História</div>
-                            <div class="theme-count">5 perguntas</div>
+                            <div class="theme-count" id="count-História"></div>
                         </div>
-                        <div class="theme-card" onclick="selectTheme('Ciências')">
+                        <div class="theme-card" onclick="selectTheme('Ciências', this)">
                             <div class="theme-icon">🔬</div>
                             <div class="theme-name">Ciências</div>
-                            <div class="theme-count">5 perguntas</div>
+                            <div class="theme-count" id="count-Ciências"></div>
                         </div>
-                        <div class="theme-card" onclick="selectTheme('Geografia')">
+                        <div class="theme-card" onclick="selectTheme('Geografia', this)">
                             <div class="theme-icon">🌍</div>
                             <div class="theme-name">Geografia</div>
-                            <div class="theme-count">5 perguntas</div>
+                            <div class="theme-count" id="count-Geografia"></div>
                         </div>
-                        <div class="theme-card" onclick="selectTheme('Cultura Geral')">
+                        <div class="theme-card" onclick="selectTheme('Cultura Geral', this)">
                             <div class="theme-icon">🎭</div>
                             <div class="theme-name">Cultura Geral</div>
-                            <div class="theme-count">5 perguntas</div>
+                            <div class="theme-count" id="count-Cultura Geral"></div>
                         </div>
-                        <div class="theme-card" onclick="selectTheme('Tecnologia')">
+                        <div class="theme-card" onclick="selectTheme('Tecnologia', this)">
                             <div class="theme-icon">💻</div>
                             <div class="theme-name">Tecnologia</div>
-                            <div class="theme-count">5 perguntas</div>
+                            <div class="theme-count" id="count-Tecnologia"></div>
                         </div>
-                        <div class="theme-card" onclick="selectTheme('Matemática')">
+                        <div class="theme-card" onclick="selectTheme('Matemática', this)">
                             <div class="theme-icon">🔢</div>
                             <div class="theme-name">Matemática</div>
-                            <div class="theme-count">5 perguntas</div>
+                            <div class="theme-count" id="count-Matemática"></div>
                         </div>
                     </div>
                 </div>
@@ -492,7 +548,7 @@
                 <div class="features">
                     <div class="feature">
                         <div class="feature-icon">📚</div>
-                        <div class="feature-title">10 Perguntas</div>
+                        <div class="feature-title" id="feature-question-count">10 Perguntas</div>
                         <div class="feature-desc">Desafios variados</div>
                     </div>
                     <div class="feature">
@@ -510,12 +566,11 @@
                 <button class="btn" id="startBtn" onclick="startQuiz()" disabled>Começar Quiz</button>
             </div>
 
-            <!-- Quiz Screen -->
             <div id="quizScreen" class="hidden">
                 <div class="stats">
                     <div class="stat-item">
                         <div class="stat-label">Pergunta</div>
-                        <div class="stat-value"><span id="currentQuestion">1</span>/10</div>
+                        <div class="stat-value"><span id="currentQuestion">1</span>/<span id="totalQuestionsDisplay">10</span></div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">Pontuação</div>
@@ -541,7 +596,6 @@
                 <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
             </div>
 
-            <!-- Results Screen -->
             <div id="resultsScreen" class="results-screen hidden">
                 <h2>Quiz Finalizado!</h2>
                 <div class="score-display" id="finalScore"></div>
@@ -550,7 +604,7 @@
                 <div class="results-details">
                     <div class="result-item">
                         <div class="result-label">Total de Perguntas</div>
-                        <div class="result-value">10</div>
+                        <div class="result-value" id="resultsTotalQuestions"></div>
                     </div>
                     <div class="result-item">
                         <div class="result-label">Acertos</div>
@@ -568,7 +622,7 @@
     </div>
 
     <script>
-        // Banco de perguntas
+        // Banco de perguntas (Mantido o original, ele está bem estruturado)
         const questionBank = [
             // História
             {
@@ -762,13 +816,17 @@
                 correct: 1
             }
         ];
-
+        
+        // --- Variáveis de Estado ---
         let currentQuestions = [];
         let currentQuestionIndex = 0;
         let score = 0;
         let correctAnswers = 0;
         let selectedAnswer = null;
         let selectedTheme = null;
+        const totalQuestions = 10; // O quiz terá sempre 10 perguntas
+
+        // --- Funções Auxiliares ---
 
         function shuffleArray(array) {
             const newArray = [...array];
@@ -779,28 +837,65 @@
             return newArray;
         }
 
-        function selectTheme(theme) {
+        function updateThemeCounts() {
+            const themes = ["História", "Ciências", "Geografia", "Cultura Geral", "Tecnologia", "Matemática"];
+            let totalCount = 0;
+
+            themes.forEach(theme => {
+                const count = questionBank.filter(q => q.category === theme).length;
+                totalCount += count;
+                const countElement = document.getElementById(`count-${theme.replace(/ /g, '')}`);
+                if (countElement) {
+                    countElement.textContent = `${count} perguntas`;
+                }
+            });
+
+            // Atualiza o contador para "Todos os Temas"
+            const allCountElement = document.getElementById('count-all');
+            if (allCountElement) {
+                allCountElement.textContent = `${totalCount} perguntas (${totalQuestions} serão sorteadas)`;
+            }
+
+            // Atualiza o contador de perguntas no Feature
+            document.getElementById('feature-question-count').textContent = `${totalQuestions} Perguntas`;
+            document.getElementById('totalQuestionsDisplay').textContent = totalQuestions;
+            document.getElementById('resultsTotalQuestions').textContent = totalQuestions;
+        }
+
+        // --- Lógica Principal do Quiz ---
+
+        function selectTheme(theme, element) {
             selectedTheme = theme;
             
-            // Update UI to show selected theme
+            // Atualiza a UI para mostrar o tema selecionado
             const themeCards = document.querySelectorAll('.theme-card');
             themeCards.forEach(card => card.classList.remove('selected'));
-            event.target.closest('.theme-card').classList.add('selected');
+            element.classList.add('selected');
             
-            // Enable start button
+            // Habilita o botão de iniciar
             document.getElementById('startBtn').disabled = false;
         }
 
         function startQuiz() {
             let availableQuestions;
+            let questionsToSelect = totalQuestions;
+
             if (selectedTheme === 'all') {
+                // Para "Todos os Temas", usamos o banco inteiro para sorteio
                 availableQuestions = questionBank;
             } else {
+                // Para um tema específico, filtramos por categoria
                 availableQuestions = questionBank.filter(q => q.category === selectedTheme);
+                // Como cada tema tem 5 perguntas, ajustamos o número de questões para 5
+                questionsToSelect = availableQuestions.length; 
+                // Atualiza o display do total de perguntas para o tema específico
+                document.getElementById('totalQuestionsDisplay').textContent = questionsToSelect;
+                document.getElementById('resultsTotalQuestions').textContent = questionsToSelect;
             }
             
-            // Seleciona 10 perguntas aleatórias do tema escolhido
-            currentQuestions = shuffleArray(availableQuestions).slice(0, 10);
+            // Seleciona um subconjunto de perguntas aleatórias
+            currentQuestions = shuffleArray(availableQuestions).slice(0, questionsToSelect);
+            
             currentQuestionIndex = 0;
             score = 0;
             correctAnswers = 0;
@@ -817,6 +912,7 @@
             const question = currentQuestions[currentQuestionIndex];
             selectedAnswer = null;
 
+            // Atualiza contadores
             document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
             document.getElementById('category').textContent = question.category;
             document.getElementById('questionText').textContent = question.question;
@@ -827,34 +923,69 @@
             optionsContainer.innerHTML = '';
 
             const letters = ['A', 'B', 'C', 'D'];
-            question.options.forEach((option, index) => {
+            // Embaralha as opções para aumentar a aleatoriedade e evitar que a correta seja sempre na mesma posição
+            const shuffledOptions = shuffleOptions(question.options, question.correct);
+
+            shuffledOptions.shuffled.forEach((option, index) => {
                 const optionDiv = document.createElement('div');
                 optionDiv.className = 'option';
                 optionDiv.innerHTML = `<span class="option-letter">${letters[index]}</span>${option}`;
-                optionDiv.onclick = () => selectOption(index, optionDiv);
+                // Passa o *índice original* da resposta correta no array de options
+                optionDiv.onclick = () => selectOption(shuffledOptions.originalIndices[index], optionDiv, shuffledOptions.shuffled, shuffledOptions.originalCorrectIndex);
                 optionsContainer.appendChild(optionDiv);
             });
 
             updateProgress();
         }
 
-        function selectOption(index, element) {
+        /**
+         * Embaralha as opções e rastreia o novo índice da resposta correta.
+         * @param {Array<string>} options - As opções da pergunta.
+         * @param {number} correctIndex - O índice original da resposta correta.
+         */
+        function shuffleOptions(options, correctIndex) {
+            let originalIndices = options.map((_, i) => i);
+            let shuffledOptions = [...options];
+
+            // Algoritmo de Fisher-Yates para embaralhar e rastrear os índices
+            for (let i = shuffledOptions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+                [originalIndices[i], originalIndices[j]] = [originalIndices[j], originalIndices[i]];
+            }
+
+            // Encontra o novo índice da resposta correta
+            const newCorrectIndex = originalIndices.findIndex(index => index === correctIndex);
+
+            return {
+                shuffled: shuffledOptions,
+                originalIndices: originalIndices,
+                originalCorrectIndex: newCorrectIndex
+            };
+        }
+
+
+        function selectOption(originalIndex, element, optionsArray, correctDisplayIndex) {
+            // originalIndex é o índice da opção na lista *original* da questão (0 a 3)
+            // correctDisplayIndex é o índice da opção correta *na tela* (após o embaralhamento)
+
             if (selectedAnswer !== null) return;
 
-            selectedAnswer = index;
+            selectedAnswer = originalIndex;
             const question = currentQuestions[currentQuestionIndex];
             const options = document.querySelectorAll('.option');
             
             options.forEach(opt => opt.classList.add('disabled'));
 
-            if (index === question.correct) {
+            if (originalIndex === question.correct) {
                 element.classList.add('correct');
                 score += 10;
                 correctAnswers++;
                 showFeedback(true, question.options[question.correct]);
             } else {
                 element.classList.add('incorrect');
-                options[question.correct].classList.add('correct');
+                // Adiciona a classe 'correct' ao elemento que contém a resposta correta na tela
+                options[correctDisplayIndex].classList.add('correct'); 
                 showFeedback(false, question.options[question.correct]);
             }
 
@@ -872,7 +1003,7 @@
                 feedback.textContent = '✓ Correto! Muito bem!';
             } else {
                 feedback.classList.add('incorrect');
-                feedback.textContent = `✗ Incorreto. A resposta correta é: ${correctAnswer}`;
+                feedback.textContent = `✗ Incorreto. A resposta correta era: ${correctAnswer}`;
             }
         }
 
@@ -887,7 +1018,8 @@
         }
 
         function updateProgress() {
-            const progress = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+            const total = currentQuestions.length;
+            const progress = ((currentQuestionIndex + 1) / total) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
         }
 
@@ -895,10 +1027,12 @@
             document.getElementById('quizScreen').classList.add('hidden');
             document.getElementById('resultsScreen').classList.remove('hidden');
 
-            const percentage = (correctAnswers / currentQuestions.length) * 100;
+            const total = currentQuestions.length;
+            const percentage = (correctAnswers / total) * 100;
             document.getElementById('finalScore').textContent = `${percentage.toFixed(0)}%`;
             document.getElementById('finalCorrect').textContent = correctAnswers;
-            document.getElementById('finalIncorrect').textContent = currentQuestions.length - correctAnswers;
+            document.getElementById('finalIncorrect').textContent = total - correctAnswers;
+            document.getElementById('resultsTotalQuestions').textContent = total;
 
             let message = '';
             if (percentage === 100) {
@@ -919,12 +1053,20 @@
         function restartQuiz() {
             selectedTheme = null;
             document.getElementById('startBtn').disabled = true;
+            
+            // Remove a seleção visual dos cards
             const themeCards = document.querySelectorAll('.theme-card');
             themeCards.forEach(card => card.classList.remove('selected'));
             
+            // Reseta a contagem de perguntas no display
+            document.getElementById('totalQuestionsDisplay').textContent = totalQuestions;
+
             document.getElementById('resultsScreen').classList.add('hidden');
             document.getElementById('startScreen').classList.remove('hidden');
         }
+
+        // Garante que as contagens sejam atualizadas ao carregar a página
+        document.addEventListener('DOMContentLoaded', updateThemeCounts);
     </script>
 </body>
 </html>
