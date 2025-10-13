@@ -285,6 +285,17 @@
             font-size: 0.8rem;
             font-weight: 600;
             box-shadow: 0 0 5px #ffffff;
+            text-transform: capitalize;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .category-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            vertical-align: middle;
         }
 
         .event-description {
@@ -564,7 +575,7 @@
             </div>
 
             <div class="search-filter">
-                <input type="text" class="search-input" id="searchInput" placeholder="Buscar eventos...">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Digite o nome do evento que você criou...">
                 <select class="filter-select" id="categoryFilter">
                     <option value="all">Todas Categorias</option>
                     <option value="trabalho">Trabalho</option>
@@ -574,6 +585,8 @@
                     <option value="aniversario">Aniversário</option>
                     <option value="outro">Outro</option>
                 </select>
+                <button class="btn" id="clearFiltersBtn" title="Limpar Filtros">🔄</button>
+                <button class="btn" id="clearAllEventsBtn" title="Limpar Todos os Eventos" style="background: #ef4444; display: none;">🗑️</button>
             </div>
 
             <button class="btn btn-primary" id="addEventBtn">+ Novo Evento</button>
@@ -732,8 +745,10 @@
         let currentDate = new Date();
         let currentView = 'month';
         let events = JSON.parse(localStorage.getItem('agendaEvents')) || [];
+        let filteredEvents = []; // Array para eventos filtrados
         let editingEventId = null;
         let selectedColor = '#3b82f6';
+        let searchTimeout = null; // Para debounce da pesquisa
 
         // Categorias com cores padrão
         const categoryColors = {
@@ -745,11 +760,24 @@
             outro: '#ec4899'
         };
 
+        
+        function updateClearAllButton() {
+            const clearAllEventsBtn = document.getElementById('clearAllEventsBtn');
+            if (clearAllEventsBtn) {
+                if (events.length > 0) {
+                    clearAllEventsBtn.style.display = 'block';
+                } else {
+                    clearAllEventsBtn.style.display = 'none';
+                }
+            }
+        }
+        
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
             initializeEventListeners();
             renderCalendar();
             updateStats();
+            updateClearAllButton();
         });
 
         function initializeEventListeners() {
@@ -771,12 +799,38 @@
             document.getElementById('prevDay').addEventListener('click', () => changeDay(-1));
             document.getElementById('nextDay').addEventListener('click', () => changeDay(1));
 
-            // Modal
-            document.getElementById('addEventBtn').addEventListener('click', openNewEventModal);
-            document.getElementById('closeModal').addEventListener('click', closeModal);
-            document.getElementById('cancelBtn').addEventListener('click', closeModal);
-            document.getElementById('eventForm').addEventListener('submit', saveEvent);
-            document.getElementById('deleteEventBtn').addEventListener('click', deleteEvent);
+            // Modal - Adicionar evento
+            const addEventBtn = document.getElementById('addEventBtn');
+            if (addEventBtn) {
+                addEventBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Botão Adicionar Evento clicado!');
+                    openNewEventModal();
+                });
+            } else {
+                console.error('Botão addEventBtn não encontrado!');
+            }
+            
+            // Outros eventos do modal
+            const closeModalBtn = document.getElementById('closeModal');
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', closeModal);
+            }
+            
+            const cancelBtn = document.getElementById('cancelBtn');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', closeModal);
+            }
+            
+            const eventForm = document.getElementById('eventForm');
+            if (eventForm) {
+                eventForm.addEventListener('submit', saveEvent);
+            }
+            
+            const deleteEventBtn = document.getElementById('deleteEventBtn');
+            if (deleteEventBtn) {
+                deleteEventBtn.addEventListener('click', deleteEvent);
+            }
 
             // Color selection
             document.querySelectorAll('.color-option').forEach(option => {
@@ -787,9 +841,64 @@
                 });
             });
 
-            // Search and filter
-            document.getElementById('searchInput').addEventListener('input', filterEvents);
-            document.getElementById('categoryFilter').addEventListener('change', filterEvents);
+            // Search and filter - pesquisa em tempo real
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', filterEvents);
+                searchInput.addEventListener('keyup', filterEvents);
+                searchInput.addEventListener('paste', () => {
+                    // Pequeno delay para paste
+                    setTimeout(filterEvents, 50);
+                });
+            }
+            
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', filterEvents);
+            }
+            
+            // Clear filters
+            const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+            if (clearFiltersBtn) {
+                clearFiltersBtn.addEventListener('click', function() {
+                    document.getElementById('searchInput').value = '';
+                    document.getElementById('categoryFilter').value = 'all';
+                    filteredEvents = [];
+                    console.log('Filtros limpos');
+                    renderCurrentView(); // Atualizar visualização
+                    updateStats(); // Restaurar estatísticas originais
+                    updateFilterIndicators(); // Atualizar indicadores visuais
+                });
+            }
+            
+            // Clear all events button (only show if there are events)
+            const clearAllEventsBtn = document.getElementById('clearAllEventsBtn');
+            if (clearAllEventsBtn) {
+                clearAllEventsBtn.addEventListener('click', function() {
+                    if (confirm('Tem certeza que deseja excluir TODOS os eventos? Esta ação não pode ser desfeita.')) {
+                        events = [];
+                        filteredEvents = [];
+                        localStorage.setItem('agendaEvents', JSON.stringify(events));
+                        console.log('🗑️ Todos os eventos foram removidos');
+                        renderCurrentView();
+                        updateStats();
+                        updateClearAllButton();
+                    }
+                });
+            }
+            
+            // Category color auto-selection
+            const eventCategorySelect = document.getElementById('eventCategory');
+            if (eventCategorySelect) {
+                eventCategorySelect.addEventListener('change', function() {
+                    const selectedCategory = this.value;
+                    const categoryColor = categoryColors[selectedCategory];
+                    if (categoryColor) {
+                        selectCategoryColor(categoryColor);
+                    }
+                });
+            }
         }
 
         function renderCalendar() {
@@ -1023,7 +1132,26 @@
             });
 
             if (sortedEvents.length === 0) {
-                listView.innerHTML = '<div style="text-align: center; color: #888; padding: 40px;">Nenhum evento encontrado</div>';
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                const category = document.getElementById('categoryFilter').value;
+                let message = 'Nenhum evento encontrado';
+                let suggestion = 'Adicione novos eventos usando o botão "+ Novo Evento"';
+                
+                if (searchTerm) {
+                    message = `🔍 Nenhum evento chamado "${searchTerm}" foi encontrado`;
+                    suggestion = 'Tente buscar por outro nome ou verifique a grafia';
+                } else if (category !== 'all') {
+                    message = `📁 Nenhum evento encontrado na categoria "${category}"`;
+                    suggestion = 'Tente selecionar "Todas Categorias" ou criar eventos nesta categoria';
+                }
+                
+                listView.innerHTML = `
+                    <div style="text-align: center; color: #888; padding: 40px;">
+                        <div style="font-size: 1.2rem; margin-bottom: 10px;">${message}</div>
+                        <div style="font-size: 0.9rem; margin-bottom: 15px;">${suggestion}</div>
+                        ${searchTerm ? `<div style="font-size: 0.8rem; color: #666;">Dica: A busca procura no título do evento primeiro, depois em outros campos</div>` : ''}
+                    </div>
+                `;
             }
         }
 
@@ -1036,21 +1164,20 @@
             switch(currentView) {
                 case 'month':
                     document.getElementById('monthView').style.display = 'block';
-                    renderCalendar();
                     break;
                 case 'week':
                     document.getElementById('weekView').style.display = 'block';
-                    renderWeekView();
                     break;
                 case 'day':
                     document.getElementById('dayView').style.display = 'block';
-                    renderDayView();
                     break;
                 case 'list':
                     document.getElementById('listView').style.display = 'block';
-                    renderListView();
                     break;
             }
+            
+            // Renderizar a visualização atual (com ou sem filtros)
+            renderCurrentView();
         }
 
         function changeMonth(delta) {
@@ -1069,23 +1196,65 @@
         }
 
         function openNewEventModal(date = null) {
-            editingEventId = null;
-            document.getElementById('modalTitle').textContent = 'Novo Evento';
-            document.getElementById('eventForm').reset();
-            document.getElementById('deleteEventBtn').style.display = 'none';
+            console.log('Abrindo modal de novo evento...');
             
-            if (date) {
-                document.getElementById('eventDate').value = date.toISOString().split('T')[0];
-            } else {
-                document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
+            try {
+                editingEventId = null;
+                
+                // Resetar o formulário
+                const eventForm = document.getElementById('eventForm');
+                if (eventForm) {
+                    eventForm.reset();
+                }
+                
+                // Definir título do modal
+                const modalTitle = document.getElementById('modalTitle');
+                if (modalTitle) {
+                    modalTitle.textContent = 'Novo Evento';
+                }
+                
+                // Esconder botão de deletar
+                const deleteEventBtn = document.getElementById('deleteEventBtn');
+                if (deleteEventBtn) {
+                    deleteEventBtn.style.display = 'none';
+                }
+                
+                // Definir data padrão
+                const eventDate = document.getElementById('eventDate');
+                if (eventDate) {
+                    if (date) {
+                        eventDate.value = date.toISOString().split('T')[0];
+                    } else {
+                        eventDate.value = new Date().toISOString().split('T')[0];
+                    }
+                }
+                
+                // Definir horário padrão
+                const eventTime = document.getElementById('eventTime');
+                if (eventTime) {
+                    eventTime.value = '09:00';
+                }
+                
+                // Definir categoria e cor padrão
+                const eventCategory = document.getElementById('eventCategory');
+                if (eventCategory) {
+                    eventCategory.value = 'trabalho'; // categoria padrão
+                    const defaultColor = categoryColors['trabalho'] || '#3b82f6';
+                    selectCategoryColor(defaultColor);
+                }
+                
+                // Abrir o modal
+                const eventModal = document.getElementById('eventModal');
+                if (eventModal) {
+                    eventModal.classList.add('active');
+                    console.log('Modal aberto com sucesso!');
+                } else {
+                    console.error('Modal não encontrado!');
+                }
+                
+            } catch (error) {
+                console.error('Erro ao abrir modal:', error);
             }
-            
-            document.getElementById('eventTime').value = '09:00';
-            selectedColor = '#3b82f6';
-            document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
-            document.querySelector('.color-option').classList.add('selected');
-            
-            document.getElementById('eventModal').classList.add('active');
         }
 
         function openEditEventModal(event) {
@@ -1120,6 +1289,9 @@
         function saveEvent(e) {
             e.preventDefault();
             
+            const category = document.getElementById('eventCategory').value;
+            const eventColor = selectedColor || categoryColors[category] || '#3b82f6';
+            
             const eventData = {
                 id: editingEventId || Date.now().toString(),
                 title: document.getElementById('eventTitle').value,
@@ -1127,11 +1299,13 @@
                 date: document.getElementById('eventDate').value,
                 time: document.getElementById('eventTime').value,
                 duration: parseInt(document.getElementById('eventDuration').value),
-                category: document.getElementById('eventCategory').value,
+                category: category,
                 location: document.getElementById('eventLocation').value,
                 participants: document.getElementById('eventParticipants').value,
-                color: selectedColor
+                color: eventColor
             };
+            
+            console.log('Salvando evento:', eventData);
 
             if (editingEventId) {
                 const index = events.findIndex(e => e.id === editingEventId);
@@ -1144,6 +1318,7 @@
             closeModal();
             switchView();
             updateStats();
+            updateClearAllButton();
         }
 
         function deleteEvent() {
@@ -1153,31 +1328,102 @@
                 closeModal();
                 switchView();
                 updateStats();
+                updateClearAllButton();
             }
         }
 
         function filterEvents() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            // Limpar timeout anterior se existir
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+            
+            // Adicionar debounce para pesquisa mais suave
+            searchTimeout = setTimeout(() => {
+                performFilter();
+            }, 300); // 300ms de delay
+        }
+        
+        function performFilter() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const category = document.getElementById('categoryFilter').value;
-
-            let filtered = events;
-
+            
+            console.log('Buscando eventos por nome:', searchTerm, 'Categoria:', category);
+            
+            // Aplicar filtros com prioridade no título
+            filteredEvents = events.filter(event => {
+                let matchesSearch = true;
+                let matchesCategory = true;
+                
+                // Filtro de busca - PRIORIDADE NO TÍTULO
+                if (searchTerm) {
+                    const eventTitle = event.title.toLowerCase();
+                    
+                    // Primeira prioridade: busca exata no título
+                    if (eventTitle === searchTerm) {
+                        matchesSearch = true;
+                    }
+                    // Segunda prioridade: título começa com o termo
+                    else if (eventTitle.startsWith(searchTerm)) {
+                        matchesSearch = true;
+                    }
+                    // Terceira prioridade: título contém o termo
+                    else if (eventTitle.includes(searchTerm)) {
+                        matchesSearch = true;
+                    }
+                    // Quarta prioridade: busca em outros campos (opcional)
+                    else {
+                        matchesSearch = 
+                            (event.description && event.description.toLowerCase().includes(searchTerm)) ||
+                            (event.location && event.location.toLowerCase().includes(searchTerm)) ||
+                            (event.participants && event.participants.toLowerCase().includes(searchTerm));
+                    }
+                }
+                
+                // Filtro de categoria
+                if (category !== 'all') {
+                    matchesCategory = event.category === category;
+                }
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            // Ordenar resultados por relevância (títulos primeiro)
             if (searchTerm) {
-                filtered = filtered.filter(e => 
-                    e.title.toLowerCase().includes(searchTerm) ||
-                    (e.description && e.description.toLowerCase().includes(searchTerm)) ||
-                    (e.location && e.location.toLowerCase().includes(searchTerm))
-                );
+                filteredEvents.sort((a, b) => {
+                    const aTitleLower = a.title.toLowerCase();
+                    const bTitleLower = b.title.toLowerCase();
+                    
+                    // Correspondência exata no título vem primeiro
+                    if (aTitleLower === searchTerm && bTitleLower !== searchTerm) return -1;
+                    if (bTitleLower === searchTerm && aTitleLower !== searchTerm) return 1;
+                    
+                    // Título que começa com o termo vem antes
+                    if (aTitleLower.startsWith(searchTerm) && !bTitleLower.startsWith(searchTerm)) return -1;
+                    if (bTitleLower.startsWith(searchTerm) && !aTitleLower.startsWith(searchTerm)) return 1;
+                    
+                    // Título que contém o termo vem antes
+                    if (aTitleLower.includes(searchTerm) && !bTitleLower.includes(searchTerm)) return -1;
+                    if (bTitleLower.includes(searchTerm) && !aTitleLower.includes(searchTerm)) return 1;
+                    
+                    // Ordenar alfabeticamente se mesma relevância
+                    return a.title.localeCompare(b.title, 'pt-BR');
+                });
             }
-
-            if (category !== 'all') {
-                filtered = filtered.filter(e => e.category === category);
+            
+            console.log(`✨ Encontrados: ${filteredEvents.length} eventos com "${searchTerm}"`);
+            if (filteredEvents.length > 0) {
+                console.log('Eventos encontrados:', filteredEvents.map(e => e.title));
             }
-
-            const tempEvents = events;
-            events = filtered;
-            renderListView();
-            events = tempEvents;
+            
+            // Atualizar visualização
+            renderCurrentView();
+            
+            // Atualizar estatísticas
+            updateFilteredStats(filteredEvents);
+            
+            // Atualizar indicadores visuais
+            updateFilterIndicators();
         }
 
         function updateStats() {
@@ -1204,6 +1450,106 @@
             document.getElementById('todayEvents').textContent = todayEvents;
             document.getElementById('weekEvents').textContent = weekEvents;
             document.getElementById('monthEvents').textContent = monthEvents;
+        }
+        
+        function updateFilteredStats(filteredEvents) {
+            const today = new Date().toISOString().split('T')[0];
+            const todayEvents = filteredEvents.filter(e => e.date === today).length;
+
+            const startOfWeek = new Date();
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            const weekEvents = filteredEvents.filter(e => {
+                const eventDate = new Date(e.date);
+                return eventDate >= startOfWeek && eventDate <= endOfWeek;
+            }).length;
+
+            const monthEvents = filteredEvents.filter(e => {
+                const eventDate = new Date(e.date);
+                return eventDate.getMonth() === currentDate.getMonth() &&
+                       eventDate.getFullYear() === currentDate.getFullYear();
+            }).length;
+
+            document.getElementById('totalEvents').textContent = filteredEvents.length;
+            document.getElementById('todayEvents').textContent = todayEvents;
+            document.getElementById('weekEvents').textContent = weekEvents;
+            document.getElementById('monthEvents').textContent = monthEvents;
+        }
+        
+        function renderCurrentView() {
+            // Usar eventos filtrados se houver filtros ativos, senão usar todos os eventos
+            const eventsToRender = (isFilterActive()) ? filteredEvents : events;
+            const originalEvents = events;
+            
+            // Temporariamente substituir events pelos filtrados para renderização
+            events = eventsToRender;
+            
+            switch(currentView) {
+                case 'month':
+                    renderCalendar();
+                    break;
+                case 'week':
+                    renderWeekView();
+                    break;
+                case 'day':
+                    renderDayView();
+                    break;
+                case 'list':
+                    renderListView();
+                    break;
+            }
+            
+            // Restaurar events original
+            events = originalEvents;
+        }
+        
+        function isFilterActive() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            const category = document.getElementById('categoryFilter').value;
+            return searchTerm !== '' || category !== 'all';
+        }
+        
+        function updateFilterIndicators() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+            
+            if (isFilterActive()) {
+                // Adicionar classe visual para indicar filtros ativos
+                searchInput.style.borderColor = '#10b981';
+                searchInput.style.boxShadow = '0 0 5px #10b981';
+                categoryFilter.style.borderColor = '#10b981';
+                categoryFilter.style.boxShadow = '0 0 5px #10b981';
+                
+                if (clearFiltersBtn) {
+                    clearFiltersBtn.style.background = '#ef4444';
+                    clearFiltersBtn.style.color = '#fff';
+                }
+            } else {
+                // Remover indicadores visuais
+                searchInput.style.borderColor = '#444';
+                searchInput.style.boxShadow = 'inset 0 0 5px #ffffff';
+                categoryFilter.style.borderColor = '#444';
+                categoryFilter.style.boxShadow = 'inset 0 0 5px #ffffff';
+                
+                if (clearFiltersBtn) {
+                    clearFiltersBtn.style.background = '#222';
+                    clearFiltersBtn.style.color = '#fff';
+                }
+            }
+        }
+        
+        function selectCategoryColor(color) {
+            selectedColor = color;
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.color === color) {
+                    option.classList.add('selected');
+                }
+            });
+            console.log('Cor selecionada automaticamente:', color);
         }
     </script>
 </body>
