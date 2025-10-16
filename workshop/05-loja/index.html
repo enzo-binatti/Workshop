@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Sua Loja Online</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-store"></i>
+                <h1>SuperStore</h1s>
+            </div>
+            <nav class="nav">
+                <a href="../03-dashboard/"><i class="fas fa-chart-pie"></i> Dashboard</a>
+                <div class="cart-icon" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="main">
+        <section class="hero">
+            <div class="container">
+                <h1>Bem-vindo à TechStore</h1>
+                <p>Os melhores produtos com qualidade e preços incríveis</p>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Buscar produtos...">
+                    <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="filters">
+            <div class="container">
+                <div class="filter-group">
+                    <label for="categoryFilter">Categoria:</label>
+                    <select id="categoryFilter" onchange="filterProducts()">
+                        <option value="">Todas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sortBy">Ordenar por:</label>
+                    <select id="sortBy" onchange="sortProducts()">
+                        <option value="name">Nome</option>
+                        <option value="price-asc">Preço (menor)</option>
+                        <option value="price-desc">Preço (maior)</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+        
+        <section class="products">
+            <div class="container">
+                <h2>Nossos Produtos</h2>
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Carregando produtos...</p>
+                </div>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Produtos serão carregados aqui -->
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Carrinho</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Itens do carrinho -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: R$ <span id="cartTotal">0,00</span></strong>
+            </div>
+            <button class="btn-checkout" onclick="checkout()">
+                <i class="fas fa-credit-card"></i> Finalizar Compra
+            </button>
+        </div>
+    </div>
+    
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Finalizar Compra</h3>
+                <button class="close-modal" onclick="closeCheckoutModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="checkoutForm">
+                <div class="form-group">
+                    <label for="customerName">Nome Completo:</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerEmail">Email:</label>
+                    <input type="email" id="customerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Telefone:</label>
+                    <input type="tel" id="customerPhone">
+                </div>
+                <div class="form-summary">
+                    <h4>Resumo do Pedido</h4>
+                    <div id="orderSummary"></div>
+                    <div class="total-summary">
+                        <strong>Total: R$ <span id="finalTotal">0,00</span></strong>
+                    </div>
+                </div>
+                <button type="submit" class="btn-confirm">
+                    <i class="fas fa-check"></i> Confirmar Pedido
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeModals()"></div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 TechStore. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+    
+    <script src="js/app.js"></script>
+</body>
+</html>
